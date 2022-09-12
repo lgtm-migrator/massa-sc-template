@@ -7,14 +7,13 @@
  * which is ready to be send on Massa network node!
  **/
 
-import { create_sc, include_base64, print, call, Context } from "massa-sc-std";
-import { JSON } from 'json-as';
+import { createSC, fileToBase64, call, Context, generateEvent} from "@massalabs/massa-sc-std";
 
 export function main(_args: string): void {
-    const bytes = include_base64('./build/smart-contract.wasm');
-    let addr = create_sc(bytes);
-    print("Address = " + addr);
+    const bytes = fileToBase64('./build/smart-contract.wasm');
+    let addr = createSC(bytes);
+    generateEvent("Address = " + addr.toByteString());
     // Here example of how to call a smart contract
-    print(call(addr, "helloworld", "World", 0));
-    print(`${Context.get_call_stack()[0]}`)
+    generateEvent(call(addr, "helloworld", "World", 0));
+    generateEvent(`${Context.caller().toByteString()}`)
 }
